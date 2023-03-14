@@ -3,19 +3,19 @@ import Usuario from "../models/Usuario.js"
 import { generarId } from "../helpers/tokens.js"
 import { emailRegistro } from "../helpers/emails.js"
 
-const formularioLogin = (req, res)=>{
-  res.render('auth/login', {
-    pagina: "Iniciar Sesión"
-  } )
-}
+  const formularioLogin = (req, res)=>{
+    res.render('auth/login', {
+      pagina: "Iniciar Sesión"
+    } )
+  }
 
-const formularioRegistro = (req, res)=>{
-  res.render('auth/registro', {
-    pagina: "Crear Cuenta"
-  } )
-}
+  const formularioRegistro = (req, res)=>{
+    res.render('auth/registro', {
+      pagina: "Crear Cuenta"
+    } )
+  }
 
-const registrar = async(req, res)=>{
+  const registrar = async(req, res)=>{
   //Validacion:
   await check("nombre").notEmpty().withMessage("El campo nombre es hobligatorio").run(req);
   await check("email").isEmail().withMessage("Asegurate de escribir bien el correo").run(req);
@@ -77,24 +77,52 @@ const registrar = async(req, res)=>{
     mensaje: "Se te ha enviado un e-mail de confirmación, preciona en el enlace:"
   })
 
-}
 
-  //funcion que comprueba una cuenta:
-  const confirmar =(req, res)=>{
-    const { token } = req.params;
-console.log( token )
   }
 
-const formularioOlvidePassword = (req, res)=>{
-  res.render('auth/olvide-password', {
-    pagina: "Nuevo Password"
-  } )
-}
+  //funcion que comprueba una cuenta:
+  const confirmar = async(req, res)=>{
+    const { token } = req.params;
 
-export {
-  confirmar,
-  registrar,
-  formularioLogin,
-  formularioRegistro,
-  formularioOlvidePassword
-}
+    //Verificar si el token es evalido:
+    const usuario = await Usuario.findOne({where: {token}})
+
+
+
+    if(!usuario){
+      return res.render("auth/confirmar-cuenta",{
+        pagina: "Error al confirmar tu cuenta",
+        mensaje: "hubo un error al confirmar tu cuenta, intenta de nuevo",
+        error: true
+      })
+    }
+
+    //confirmar la cuenta
+    usuario.token = null;
+    usuario.confimado = true;
+    await usuario.save();
+
+    
+    res.render("auth/confirmar-cuenta",{
+      pagina: "Cuenta confirmada",
+      mensaje: "La cuenta se confirmo correctamente",
+    })
+    
+
+
+  }
+
+  const formularioOlvidePassword = (req, res)=>{
+    res.render('auth/olvide-password', {
+    pagina: "Nuevo Password"
+    })
+  }
+
+
+  export {
+    confirmar,
+    registrar,
+    formularioLogin,
+    formularioRegistro,
+    formularioOlvidePassword
+  }
