@@ -110,15 +110,32 @@ import { emailRegistro } from "../helpers/emails.js"
       pagina: "Cuenta confirmada",
       mensaje: "La cuenta se confirmo correctamente",
     })
-    
-
 
   }
 
   const formularioOlvidePassword = (req, res)=>{
     res.render('auth/olvide-password', {
-    pagina: "Nuevo Password"
+    pagina: "Nuevo Password",
+    csrfToken: req.csrfToken(),
     })
+  }
+
+
+  const resetPassword =async(req, res)=>{
+  //Validacion:
+  await check("email").notEmpty().withMessage("El campo no parce un Email").run(req);
+
+  let resultado = validationResult(req)
+
+  //Verificar que el resultado este vacio
+  if(!resultado.isEmpty()){
+    //errores:
+    return res.render("auth/olvide-password",{
+        pagina: "Recupera tu acceso a Real-Estate",
+        csrfToken : req.csrfToken(),
+        errores: resultado.array()
+    })
+  }
   }
 
 
@@ -127,5 +144,6 @@ import { emailRegistro } from "../helpers/emails.js"
     registrar,
     formularioLogin,
     formularioRegistro,
-    formularioOlvidePassword
+    formularioOlvidePassword,
+    resetPassword
   }
