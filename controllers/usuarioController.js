@@ -11,7 +11,8 @@ import { emailRegistro } from "../helpers/emails.js"
 
   const formularioRegistro = (req, res)=>{
     res.render('auth/registro', {
-      pagina: "Crear Cuenta"
+      pagina: "Crear Cuenta",
+      csrfToken : req.csrfToken()
     } )
   }
 
@@ -30,6 +31,7 @@ import { emailRegistro } from "../helpers/emails.js"
     //errores:
     return res.render("auth/registro",{
       pagina: "Crear Cuenta",
+      csrfToken: req.csrfToken(),
       errores: resultado.array(),
       usuario: {
         nombre: req.body.nombre,
@@ -47,6 +49,7 @@ import { emailRegistro } from "../helpers/emails.js"
   if(existeUsuario){
     return res.render("auth/registro",{
       pagina: "Crear Cuenta",
+      csrfToken: req.csrfToken(),
       errores: [{msg: "El usuario con este email ya esta registrado"}],
       usuario: {
       nombre: req.body.nombre,
