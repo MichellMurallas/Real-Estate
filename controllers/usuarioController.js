@@ -1,7 +1,7 @@
 import { check, validationResult } from "express-validator"
 import Usuario from "../models/Usuario.js"
 import { generarId } from "../helpers/tokens.js"
-import { emailRegistro } from "../helpers/emails.js"
+import { emailRegistro, emailOlvidePassword } from "../helpers/emails.js"
 
   const formularioLogin = (req, res)=>{
     res.render('auth/login', {
@@ -136,7 +136,53 @@ import { emailRegistro } from "../helpers/emails.js"
         errores: resultado.array()
     })
   }
+  //Buscar usuario:
+  const { email } = req.body
+  const usuario = await Usuario.findOne({whre: {email}})
+
+  if(!usuario){
+      return res.render("auth/olvide-password",{
+        pagina: "Recupera tu acceso a Real-Estate",
+        csrfToken : req.csrfToken(),
+        errores: [{msg: "El email no pertenece a ningun usuario"}]
+    })
   }
+
+  //Genera un Token y enviar el email:
+  usuario.token = generarId();
+  await usuario.save();
+
+  //Enviar email
+  emailOlvidePassword({
+    email: usuario.email,
+    nombre: usuario.nombre,
+    token: usuario.token
+  })
+
+  //Renderizar un mensaje
+  res.render("templates/mensaje", {
+    pagina: "Reestablece tu password",
+    mensaje: "Hemos enviado un email con las instrucciones"
+  })
+
+}
+
+const comprobarToken = async(req, res)=>{
+  const { token } = req.params;
+  const usuario = await Usuario.findOne({where: {token}})
+  if(!usuario){
+    return res.render("auth/confirmar-cuenta", {
+      pagina: "restablece tu password",
+      mensaje: "Hubo un error al validar tu infomacion, intenta de nuevo",
+      error: true
+    })
+  }
+  //Mostrar formulario para modificar el password
+}
+
+const nuevoPassword = (req, res)=>{
+  
+}
 
 
   export {
@@ -145,5 +191,7 @@ import { emailRegistro } from "../helpers/emails.js"
     formularioLogin,
     formularioRegistro,
     formularioOlvidePassword,
-    resetPassword
+    resetPassword,
+    comprobarToken,
+    nuevoPassword
   }
