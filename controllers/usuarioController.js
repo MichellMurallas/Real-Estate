@@ -27,6 +27,30 @@ import { emailRegistro, emailOlvidePassword } from "../helpers/emails.js"
         errores: resultado.array(),
       })
     }
+
+    const { email, password} = rq.body
+
+    //Comprobar si el usuario existe: 
+    const  usuario = await Usuario.findOne({ where: {email}})
+    if(!usuario){
+      return res.render("auth/login",{
+        pagina: "Iniciar Sesión",
+        csrfToken: req.csrfToken(),
+        errores: [{msg: "El usuario no existe"}]
+      })
+    }
+
+    //comprobar si el usuario esta confirmado
+    if(!usuario.confirmado){
+      return res.render("auth/login",{
+        pagina: "Iniciar Sesión",
+        csrfToken: req.csrfToken(),
+        errores: [{msg: "El usuario no ha sido confirmado"}]
+      })
+    }
+
+    //Revisar el password:
+    
   }
 
   const formularioRegistro = (req, res)=>{
