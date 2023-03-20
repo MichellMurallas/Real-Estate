@@ -50,6 +50,13 @@ import { emailRegistro, emailOlvidePassword } from "../helpers/emails.js"
     }
 
     //Revisar el password:
+    if(!usuario.verificarPassword(password)){
+      return res.render("auth/login",{
+        pagina: "Iniciar Sesión",
+        csrfToken: req.csrfToken(),
+        errores: [{msg: "El password es incorrecto"}]
+      })
+    }
     
   }
 
