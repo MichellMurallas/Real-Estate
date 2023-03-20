@@ -1,7 +1,9 @@
 import { check, validationResult } from "express-validator"
 import bcrypt from "bcrypt"
+import jwt from "jsonwebtoken"
 import Usuario from "../models/Usuario.js"
 import { generarId } from "../helpers/tokens.js"
+import { generarJWT } from "../helpers/tokens.js"
 import { emailRegistro, emailOlvidePassword } from "../helpers/emails.js"
 
   const formularioLogin = (req, res)=>{
@@ -28,7 +30,7 @@ import { emailRegistro, emailOlvidePassword } from "../helpers/emails.js"
       })
     }
 
-    const { email, password} = rq.body
+    const { email, password} = req.body
 
     //Comprobar si el usuario existe: 
     const  usuario = await Usuario.findOne({ where: {email}})
@@ -50,6 +52,23 @@ import { emailRegistro, emailOlvidePassword } from "../helpers/emails.js"
     }
 
     //Revisar el password:
+    if(!usuario.verificarPassword(password)){
+      return res.render("auth/login",{
+        pagina: "Iniciar Sesión",
+        csrfToken: req.csrfToken(),
+        errores: [{msg: "El password es incorrecto"}]
+      })
+    }
+
+    //Autenticar al usuario:
+    const token = generarJWT({id: usuario.id, nombre: usuario.nombre})
+    console.log(token)
+
+    //Almacenar en cookie:
+
+    return res.cookie("_token", token, {
+      httpOnly: true
+    }).redirect("/mis-propiedades")
     
   }
 
@@ -57,7 +76,7 @@ import { emailRegistro, emailOlvidePassword } from "../helpers/emails.js"
     res.render('auth/registro', {
       pagina: "Crear Cuenta",
       csrfToken : req.csrfToken()
-    } )
+    })
   }
 
   const registrar = async(req, res)=>{
