@@ -28,7 +28,7 @@ import { emailRegistro, emailOlvidePassword } from "../helpers/emails.js"
       })
     }
 
-    const { email, password} = rq.body
+    const { email, password} = req.body
 
     //Comprobar si el usuario existe: 
     const  usuario = await Usuario.findOne({ where: {email}})
