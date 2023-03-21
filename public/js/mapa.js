@@ -16,7 +16,7 @@
   \************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
-eval("__webpack_require__.r(__webpack_exports__);\nalert(\"Soy el mapa\")\n\n//# sourceURL=webpack://real-state/./src/js/mapa.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n(function() {\r\n  \r\n  const lat = 4.7212732;\r\n  const lng = -74.0410096;\r\n  const mapa = L.map('mapa').setView([lat, lng ], 15);\r\n  let marker;\r\n\r\n  //Utilizar Provider y Geocode\r\n  const geocodeService = L.esri.Geocoding.geocodeService()\r\n  \r\n\r\n  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {\r\n      attribution: '&copy; <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors'\r\n  }).addTo(mapa);\r\n\r\n\r\n  //Pin:\r\n  marker = new L.marker([lat, lng], {\r\n    draggable: true,\r\n    autoPan: true\r\n  })\r\n  .addTo(mapa)\r\n \r\n  //Detectar el movimiento del pin\r\n  marker.on(\"moveend\", function(e){\r\n    marker = e.target\r\n    const posicion = marker.getLatLng();\r\n    mapa.panTo(new L.LatLng(posicion.lat, posicion.lng))\r\n\r\n    //Obtener la informacion de las calles al soltar el pin:\r\n    geocodeService.reverse().latlng(posicion, 15).run(function(error, resultado){\r\n      marker.bindPopup(resultado.address.LongLabel)\r\n    })\r\n    })\r\n\r\n})()\n\n//# sourceURL=webpack://real-state/./src/js/mapa.js?");
 
 /***/ })
 
