@@ -6,7 +6,7 @@
   let marker;
 
   //Utilizar Provider y Geocode
-  const geocodeService = L.Geovoding.geocodeService()
+  const geocodeService = L.esri.Geocoding.geocodeService()
   
 
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -15,17 +15,16 @@
 
 
   //Pin:
-
   marker = new L.marker([lat, lng], {
     draggable: true,
     autoPan: true
   })
   .addTo(mapa)
-
+ 
   //Detectar el movimiento del pin
   marker.on("moveend", function(e){
     marker = e.target
-    const posicion = marker.getLantLng();
+    const posicion = marker.getLatLng();
     mapa.panTo(new L.LatLng(posicion.lat, posicion.lng))
 
     //Obtener la informacion de las calles al soltar el pin:
