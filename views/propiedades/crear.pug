@@ -58,7 +58,17 @@ block contenido
                     - var n = 1
                         while n < 10
                           option(value=n ) #{n++}
-            #mapa.h-96
+            div.border-gray-200.border-t.py-5.space-y-5
+              h3.text-lg.leading-6.font-medium.text-gray-900 Ubicación
+              p.text-gray-600 Ubica la propiedad en el mapa
+              #mapa.h-96
+
+              div
+                p.calle
+              
+              input(type="hidden" name="calle" id="calle")
+              input(type="hidden" name="lat" id="lat")
+              input(type="hidden" name="lng" id="lng")
 
 block scripts
     script(src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js")
