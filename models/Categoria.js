@@ -1,5 +1,5 @@
 import { DataTypes } from "sequelize"
-import db from "../config/db" 
+import db from "../config/db.js"
 
 const Categoria = db.define("categorias", {
   nombre: {
@@ -9,3 +9,5 @@ const Categoria = db.define("categorias", {
 });
 
 export default Categoria;
+
+//Aqui estaba el error.

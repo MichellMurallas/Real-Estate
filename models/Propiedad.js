@@ -6,7 +6,7 @@ const Propiedad = db.define("propiedades", {
     type:DataTypes.UUID,
     defaultValue: DataTypes.UUIDV4,
     allNull: false,
-    primarykey: true
+    primaryKey: true
   },
   titulo: {
     type: DataTypes.STRING(100),
@@ -47,7 +47,7 @@ const Propiedad = db.define("propiedades", {
   publicado: {
     type: DataTypes.BOOLEAN,
     allNull: false,
-    defaultValue: null
+    defaultValue: false
   }
 })
 
