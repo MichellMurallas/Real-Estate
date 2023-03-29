@@ -31,6 +31,24 @@ const importarDatos = async()=>{
   }
 }
 
+const eliminarDatos = async () =>{
+  try {
+    await Promise.all([
+      Categoria.destroy({where: {}, truncate: true}),
+      Precio.destroy({where: {}, truncate: true})
+    ])
+    console.log("Datos eliminados correctamente")
+    exit()
+  } catch (error) {
+    console.log(error)
+    exit(1)
+  }
+}
+
 if(process.argv[2] === "-i"){
   importarDatos()
+}
+
+if(process.argv[2] === "-e"){
+  eliminarDatos()
 }
