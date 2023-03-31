@@ -1,7 +1,5 @@
 import { validationResult } from "express-validator"
-import Precio from "../models/Precio.js"
-import Categoria from "../models/Categoria.js"
-//import { promises } from "nodemailer/lib/xoauth2/index.js"
+import { Precio, Categoria, Propiedad } from "../models/index.js"
 
 const admin = (req, res) =>{
   res.render("propiedades/admin", {
@@ -49,6 +47,29 @@ const guardar = async(req, res) =>{
       datos: req.body
     })
   }
+
+  //Crear registro:
+  const {titulo, descripcion, habitaciones, estacionamiento, wc, calle, lat, lng, precio: precioId, categoria: categoriaId} = req.body
+
+  try {
+    const propiedadGuardada = await Propiedad({
+      titulo,
+      descripcion, 
+      habitaciones, 
+      estacionamiento, 
+      wc, 
+      calle, 
+      lat, 
+      lng,
+      precioId,
+      categoriaId
+    })
+  } catch (error) {
+    
+  }
+
+
+  console.log(req.body)
 }
 
 export {
