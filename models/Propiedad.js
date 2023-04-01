@@ -1,12 +1,12 @@
 import { DataTypes } from "sequelize"
-import db from "../config/db" 
+import db from "../config/db.js" 
 
 const Propiedad = db.define("propiedades", {
   id: {
     type:DataTypes.UUID,
     defaultValue: DataTypes.UUIDV4,
     allNull: false,
-    primarykey: true
+    primaryKey: true
   },
   titulo: {
     type: DataTypes.STRING(100),
@@ -47,7 +47,7 @@ const Propiedad = db.define("propiedades", {
   publicado: {
     type: DataTypes.BOOLEAN,
     allNull: false,
-    defaultValue: null
+    defaultValue: false
   }
 })
 
